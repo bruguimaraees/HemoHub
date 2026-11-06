@@ -12,9 +12,6 @@ LIMITE_DOACOES_ANO = {'M': 4, 'F': 3}
 IDADE_MINIMA = 16
 IDADE_MAXIMA = 69
 IDADE_LIMITE_PRIMEIRA_DOACAO = 60
-PESO_MINIMO_KG = 50
-DIAS_POS_PARTO_NORMAL = 90
-DIAS_POS_PARTO_CESAREA = 180
 REGULAR_MINIMO_DOACOES = 2
 REGULAR_JANELA_DIAS = 730
 
@@ -30,13 +27,8 @@ class Doador(models.Model):
     cpf = models.CharField(max_length=14, unique=True)
     data_nascimento = models.DateField()
     sexo = models.CharField(max_length=1, choices=Sexo.choices)
-    peso = models.DecimalField(max_digits=5, decimal_places=1, help_text='Peso em kg')
     tipo_sanguineo = models.CharField(max_length=3, choices=TIPOS_SANGUINEOS)
     telefone = models.CharField(max_length=20, blank=True)
-
-    esta_gestante = models.BooleanField(default=False)
-    data_ultimo_parto = models.DateField(null=True, blank=True)
-    parto_cesarea = models.BooleanField(default=False)
 
     logradouro = models.CharField(max_length=200)
     numero = models.CharField(max_length=20)
@@ -127,21 +119,6 @@ class Doador(models.Model):
                     f'Após os {IDADE_LIMITE_PRIMEIRA_DOACAO} anos, só pode doar quem já doou antes dessa idade.'
                 )
 
-        if self.peso < PESO_MINIMO_KG:
-            motivos.append(f'Peso mínimo para doação é {PESO_MINIMO_KG} kg.')
-
-        if self.esta_gestante:
-            motivos.append('Gestantes não podem doar sangue.')
-
-        if self.data_ultimo_parto:
-            limite_dias = DIAS_POS_PARTO_CESAREA if self.parto_cesarea else DIAS_POS_PARTO_NORMAL
-            dias_desde_parto = (timezone.localdate() - self.data_ultimo_parto).days
-            if dias_desde_parto < limite_dias:
-                motivos.append(
-                    f'Após o parto é necessário aguardar {limite_dias} dias '
-                    f'(faltam {limite_dias - dias_desde_parto} dias).'
-                )
-
         intervalo_dias = INTERVALO_DIAS_DOACAO[self.sexo]
         limite_anual = LIMITE_DOACOES_ANO[self.sexo]
 
@@ -171,10 +148,6 @@ class Doador(models.Model):
 
         if ultima_doacao:
             candidatas.append(ultima_doacao + timedelta(days=intervalo_dias))
-
-        if self.data_ultimo_parto:
-            limite_dias = DIAS_POS_PARTO_CESAREA if self.parto_cesarea else DIAS_POS_PARTO_NORMAL
-            candidatas.append(self.data_ultimo_parto + timedelta(days=limite_dias))
 
         if self.doacoes_ultimos_12_meses() >= limite_anual:
             doacoes_recentes = list(self.historico.order_by('-data_doacao')[:limite_anual])

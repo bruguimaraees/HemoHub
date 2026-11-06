@@ -20,7 +20,6 @@ class DoadorModelTests(TestCase):
             cpf='111.222.333-44',
             data_nascimento=date(1995, 5, 10),
             sexo='M',
-            peso=Decimal('72.5'),
             tipo_sanguineo='O+',
             logradouro='Rua Teste',
             numero='100',
@@ -93,8 +92,8 @@ class DoadorModelTests(TestCase):
         self.assertEqual(self.doador.agendamentos.count(), 1)
 
     def test_agendamento_bloqueado_para_doador_inapto_sem_data_prevista(self):
-        self.doador.peso = Decimal('45.0')
-        self.doador.save()
+        from doadores.models import HistoricoDoacao
+        HistoricoDoacao.objects.create(doador=self.doador, data_doacao=date.today() - timedelta(days=10))
         self._agendar(date.today() + timedelta(days=5))
         self.assertEqual(self.doador.agendamentos.count(), 0)
 
@@ -256,7 +255,7 @@ class CpfCadastroTests(TestCase):
             'username': 'novo_doador', 'email': 'novo@email.com',
             'password1': 'SenhaForte!2026', 'password2': 'SenhaForte!2026',
             'nome_completo': 'Novo Doador', 'cpf': cpf,
-            'data_nascimento': '1990-01-01', 'sexo': 'M', 'peso': '70.0',
+            'data_nascimento': '1990-01-01', 'sexo': 'M',
             'tipo_sanguineo': 'O+', 'telefone': '',
             'logradouro': 'Rua A', 'numero': '1', 'bairro': 'Centro',
             'cidade': 'São Paulo', 'estado': 'SP', 'cep': '01001-000',
@@ -283,7 +282,7 @@ class CpfCadastroTests(TestCase):
         )
         Doador.objects.create(
             usuario=usuario, nome_completo='Existente', cpf='529.982.247-25',
-            data_nascimento=date(1990, 1, 1), sexo='M', peso=Decimal('70.0'),
+            data_nascimento=date(1990, 1, 1), sexo='M',
             tipo_sanguineo='O+', logradouro='Rua A', numero='1', bairro='Centro',
             cidade='São Paulo', estado='SP', cep='01001-000',
             latitude=Decimal('-23.55'), longitude=Decimal('-46.63'),
@@ -300,7 +299,7 @@ class CpfCadastroTests(TestCase):
         )
         Doador.objects.create(
             usuario=usuario, nome_completo='Legado', cpf='52998224725',
-            data_nascimento=date(1990, 1, 1), sexo='M', peso=Decimal('70.0'),
+            data_nascimento=date(1990, 1, 1), sexo='M',
             tipo_sanguineo='O+', logradouro='Rua A', numero='1', bairro='Centro',
             cidade='São Paulo', estado='SP', cep='01001-000',
             latitude=Decimal('-23.55'), longitude=Decimal('-46.63'),

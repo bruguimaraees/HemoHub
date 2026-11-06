@@ -18,13 +18,9 @@ class FormularioCadastroDoador(forms.Form):
     cpf = forms.CharField(label='CPF', max_length=14, widget=forms.TextInput(attrs={'class': CLASSE_CAMPO}))
     data_nascimento = forms.DateField(label='Data de nascimento', widget=forms.DateInput(attrs={'class': CLASSE_CAMPO, 'type': 'date'}))
     sexo = forms.ChoiceField(label='Sexo biológico', choices=Doador.Sexo.choices, widget=forms.Select(attrs={'class': 'form-select'}))
-    peso = forms.DecimalField(label='Peso (kg)', max_digits=5, decimal_places=1, widget=forms.NumberInput(attrs={'class': CLASSE_CAMPO}))
     tipo_sanguineo = forms.ChoiceField(label='Tipo sanguíneo', choices=Doador.tipo_sanguineo.field.choices, widget=forms.Select(attrs={'class': 'form-select'}))
     telefone = forms.CharField(label='Telefone', max_length=20, required=False, widget=forms.TextInput(attrs={'class': CLASSE_CAMPO}))
 
-    esta_gestante = forms.BooleanField(label='Está gestante', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    data_ultimo_parto = forms.DateField(label='Data do último parto', required=False, widget=forms.DateInput(attrs={'class': CLASSE_CAMPO, 'type': 'date'}))
-    parto_cesarea = forms.BooleanField(label='O parto foi cesárea', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
     logradouro = forms.CharField(label='Logradouro', max_length=200, widget=forms.TextInput(attrs={'class': CLASSE_CAMPO}))
     numero = forms.CharField(label='Número', max_length=20, widget=forms.TextInput(attrs={'class': CLASSE_CAMPO}))
@@ -74,18 +70,13 @@ class FormularioEditarDoador(forms.ModelForm):
     class Meta:
         model = Doador
         fields = [
-            'nome_completo', 'peso', 'tipo_sanguineo', 'telefone',
-            'esta_gestante', 'data_ultimo_parto', 'parto_cesarea',
+            'nome_completo', 'tipo_sanguineo', 'telefone',
             'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'cep',
         ]
         widgets = {
             'nome_completo': forms.TextInput(attrs={'class': CLASSE_CAMPO}),
-            'peso': forms.NumberInput(attrs={'class': CLASSE_CAMPO}),
             'tipo_sanguineo': forms.Select(attrs={'class': 'form-select'}),
             'telefone': forms.TextInput(attrs={'class': CLASSE_CAMPO}),
-            'esta_gestante': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'data_ultimo_parto': forms.DateInput(attrs={'class': CLASSE_CAMPO, 'type': 'date'}),
-            'parto_cesarea': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'logradouro': forms.TextInput(attrs={'class': CLASSE_CAMPO}),
             'numero': forms.TextInput(attrs={'class': CLASSE_CAMPO}),
             'bairro': forms.TextInput(attrs={'class': CLASSE_CAMPO}),

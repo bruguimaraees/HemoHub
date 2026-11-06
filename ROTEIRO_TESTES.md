@@ -24,7 +24,7 @@ Senha de todos: `HemoHub2026!`.
 | Perfil | Usuário |
 |---|---|
 | Hemocentro | `colsan_jundiai`, `banco_de_sangue_bioclinica_jun`, `banco_de_sangue_beneficencia_p` |
-| Doador | `doador_0001` até `doador_0050` (idade, peso e tipo são aleatórios; o painel mostra se está apto) |
+| Doador | `doador_0001` até `doador_0050` (idade e tipo são aleatórios; o painel mostra se está apto) |
 
 ### Dados válidos para preencher formulários
 | Campo | Valores válidos |
@@ -35,8 +35,8 @@ Senha de todos: `HemoHub2026!`.
 ### Como criar doadores para cada situação (cadastro, cenário **A**)
 | Situação | Como cadastrar |
 |---|---|
-| Apto | Nascimento em 1990, peso 75 kg |
-| Inapto por peso | Peso 45 kg |
+| Apto | Nascimento em 1990, sem doação anterior |
+| Inapto por intervalo | Registrar uma doação há menos de 60 dias (homem) ou 90 dias (mulher) |
 | Inapto por idade (62 anos) | Nascimento há 62 anos, sem doação anterior |
 | Inapto por idade (acima de 70) | Nascimento há 73 anos, sem doação anterior |
 
@@ -58,7 +58,7 @@ Senha de todos: `HemoHub2026!`.
 | A2 | Preencha senhas diferentes | "As senhas não coincidem." | ☐ |
 | A3 | Cadastre um doador apto com CPF `529.982.247-25` | Cadastro feito, entra no painel como **apto** | ☐ |
 | A4 | Cadastre outro usuário com o **mesmo CPF** (com ou sem pontuação) | "Este CPF já está cadastrado." | ☐ |
-| A5 | Cadastre um doador com peso 45 kg | Painel "não apto", motivo: peso mínimo de 50 kg | ☐ |
+| A5 | Abra o cadastro de doador | **Não** existem campos de peso, gestação nem parto (LGPD: sem dados clínicos) | ☐ |
 
 ## B. Cadastro de hemocentro
 
@@ -103,7 +103,7 @@ Senha de todos: `HemoHub2026!`.
 
 | # | Faça | Esperado | OK |
 |---|---|---|---|
-| F1 | Entre com o doador inapto por peso | Painel mostra o motivo. Tentar agendar é recusado, com mensagem | ☐ |
+| F1 | Entre com o doador inapto por intervalo | Painel mostra o motivo. Tentar agendar é recusado, com mensagem | ☐ |
 | F2 | Entre com o doador de 62 anos sem doação anterior | "Após os 60 anos, só pode doar quem já doou antes dessa idade." Agendar é recusado | ☐ |
 | F3 | Entre com o doador de 73 anos sem doação anterior | Motivo: acima de 69 anos só doadores regulares, após avaliação médica. Agendar é recusado | ☐ |
 
@@ -136,9 +136,9 @@ Senha de todos: `HemoHub2026!`.
 | I4 | Registrar para doador que doou há menos de 60 ou 90 dias, em qualquer hemocentro | Recusado, citando a data da doação anterior | ☐ |
 | I5 | Registro válido | Cria a linha "Doação Concluída" na agenda e soma 1 bolsa no estoque | ☐ |
 | I6 | Registrar doação de quem tinha agendamento em **outro** hemocentro dentro do intervalo | O agendamento do outro hemocentro é cancelado, com aviso | ☐ |
-| I7 | Selecionar um doador com peso abaixo de 50 kg (ou gestante) | Aviso vermelho com os motivos, e o botão **Confirmar doação** fica desativado | ☐ |
+| I7 | Selecionar um doador com doação recente (dentro do intervalo) | Aviso vermelho com os motivos, e o botão **Confirmar doação** fica desativado | ☐ |
 | I8 | Selecionar um doador com mais de 70 anos | Mostra a idade e "a avaliação por idade é feita pela triagem". A confirmação **não** é bloqueada por idade | ☐ |
-| I9 | Em **Concluir** (agenda), um agendamento de hoje de doador inapto por peso | Recusado, com a mensagem do motivo, e o agendamento continua pendente | ☐ |
+| I9 | Em **Concluir** (agenda), um agendamento de hoje de doador inapto por intervalo | Recusado, com a mensagem do motivo, e o agendamento continua pendente | ☐ |
 
 ## J. Cadastro presencial
 

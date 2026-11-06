@@ -35,7 +35,7 @@ O **HemoHub** é uma ponte tecnológica direta entre o hemocentro e o doador vol
   - 🔴 **Vermelho Pulsante:** Demanda urgente ou crítica
 - **Matriz de Compatibilidade Sanguínea:** Ferramenta educativa e interativa que indica quem doa e quem recebe para cada tipo.
 - **Agendamento Inteligente:** Tela própria que lista os hemocentros do mais próximo ao mais distante, com a situação de demanda de cada um, e também agendamento direto pelo mapa. As regras valem nos dois caminhos:
-  - Validação de aptidão (idade, peso, gestação, pós-parto) e dos intervalos obrigatórios (60 dias para homens e 90 dias para mulheres).
+  - Validação de aptidão (idade) e dos intervalos obrigatórios (60 dias para homens e 90 dias para mulheres).
   - Um agendamento confirmado por vez, e nenhum horário que já passou. Um agendamento confirmado cuja data passou sem comparecimento vira **Ausente** automaticamente e libera um novo agendamento.
   - Aviso com os requisitos para doação, que precisa ser confirmado antes de agendar. As regras seguem o [Ministério da Saúde](https://www.gov.br/saude/pt-br/composicao/saes/doacao-de-sangue) e a Fundação Pró-Sangue ([requisitos](https://www.portal.prosangue.sp.gov.br/fps/doacao_de_sangue__/requisitos_para_doacao___) e [quem não pode doar](https://www.portal.prosangue.sp.gov.br/fps/doacao_de_sangue__/quem_nao_pode_doar__)).
 - **Painel Pessoal:** Acompanhamento de agendamentos, cancelamentos (apenas de agendamentos confirmados) e histórico de doações.
@@ -46,7 +46,7 @@ O **HemoHub** é uma ponte tecnológica direta entre o hemocentro e o doador vol
 - **Alerta por tipo crítico:** nos tipos com estoque crítico (abaixo de 10 bolsas), o painel mostra o botão **Emitir alerta**, que notifica os doadores compatíveis no raio de 30 km, e exibe a data do último alerta emitido.
 - **Alertas de Emergência:** Disparo de notificações automáticas para doadores compatíveis em um raio de até 30 km.
 - **Agenda de Atendimento:** Lista de doadores agendados, com filtro por status e período e confirmação de presença em 1 clique, integrando automaticamente com o histórico do doador. A confirmação só é liberada a partir da data do agendamento.
-- **Cadastro em Rede e Registro de Doação:** Os hemocentros compartilham o cadastro de doadores. A busca é por nome (mínimo 3 letras) ou CPF e mostra só nome, tipo sanguíneo e cidade. O registro valida a data e o intervalo considerando as doações feitas em **qualquer** hemocentro, e cancela agendamentos do doador em outros locais que ficariam dentro do intervalo. A confirmação ("Concluir" ou "Registrar doação") é bloqueada se o doador estiver inapto por peso, gestação, pós-parto, intervalo ou limite anual. A **idade fica a cargo da triagem** do hemocentro.
+- **Cadastro em Rede e Registro de Doação:** Os hemocentros compartilham o cadastro de doadores. A busca é por nome (mínimo 3 letras) ou CPF e mostra só nome, tipo sanguíneo e cidade. O registro valida a data e o intervalo considerando as doações feitas em **qualquer** hemocentro, e cancela agendamentos do doador em outros locais que ficariam dentro do intervalo. A confirmação ("Concluir" ou "Registrar doação") é bloqueada se o doador estiver inapto por intervalo ou limite anual. A **idade e as condições clínicas (peso, gestação, pós-parto) ficam a cargo da triagem** do hemocentro: o sistema não coleta esses dados, seguindo a minimização de dados da LGPD.
 - **Cadastro Presencial:** Para quem chega sem cadastro, o hemocentro cadastra o doador num modal na própria tela de registro. O doador já entra na agenda de hoje, pronto para a doação ser confirmada.
 - **Agenda Paginada:** A agenda lista os pendentes primeiro e identifica doadores acima de 70 anos, que passam por avaliação médica no local.
 - **Cadastro com validação:** CNPJ validado pelos dígitos verificadores (quando informado).
@@ -137,7 +137,7 @@ No login, escolha a aba correspondente (**Sou Doador** ou **Sou Hemocentro**). O
 
 ## 🧪 Testes Automatizados
 
-O sistema conta com 111 testes automatizados cobrindo autenticação, restrição de acesso por perfil, regras de aptidão (inclusive por faixa de idade), agendamento (aptidão, um por vez, horário passado, aceite dos requisitos, cancelamento), validação de CPF e CNPJ, agenda e filtros do hemocentro, registro de doação (com bloqueio por aptidão), validação de horário, cadastro presencial, paginação da agenda, estoque de sangue, alerta por tipo crítico e API do mapa:
+O sistema conta com 110 testes automatizados cobrindo autenticação, restrição de acesso por perfil, regras de aptidão (inclusive por faixa de idade), agendamento (aptidão, um por vez, horário passado, aceite dos requisitos, cancelamento), validação de CPF e CNPJ, agenda e filtros do hemocentro, registro de doação (com bloqueio por aptidão), validação de horário, cadastro presencial, paginação da agenda, estoque de sangue, alerta por tipo crítico e API do mapa:
 
 ```bash
 python manage.py test

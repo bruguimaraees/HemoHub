@@ -64,11 +64,11 @@
                         <td class="small text-muted">{{ ag.hemocentro.endereco_completo }}</td>
                         <td>
                             {% if ag.status == 'confirmado' %}
-                                <span class="badge bg-success"><i class="bi bi-calendar-check"></i> Confirmado</span>
+                                <span class="badge bg-primary"><i class="bi bi-calendar-check"></i> Confirmado</span>
                             {% elif ag.status == 'concluido' %}
-                                <span class="badge bg-primary"><i class="bi bi-check2-all"></i> Doação Concluída</span>
+                                <span class="badge bg-success"><i class="bi bi-check2-all"></i> Doação Concluída</span>
                             {% elif ag.status == 'ausente' %}
-                                <span class="badge bg-dark"><i class="bi bi-person-x"></i> Ausente</span>
+                                <span class="badge bg-warning text-dark"><i class="bi bi-person-x"></i> Ausente</span>
                             {% else %}
                                 <span class="badge bg-secondary">Cancelado</span>
                             {% endif %}

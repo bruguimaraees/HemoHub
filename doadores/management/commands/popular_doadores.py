@@ -131,18 +131,14 @@ class Command(BaseCommand):
                     tipo_usuario=Usuario.TipoUsuario.DOADOR,
                 )
 
-                esta_gestante = sexo == 'F' and random.random() < 0.05
-
                 Doador.objects.create(
                     usuario=usuario,
                     nome_completo=nome_completo,
                     cpf=gerar_cpf_unico(),
                     data_nascimento=gerar_data_nascimento(),
                     sexo=sexo,
-                    peso=round(random.uniform(48, 105), 1),
                     tipo_sanguineo=sortear_tipo_sanguineo(),
                     telefone=f"({hub['ddd']}) 9{random.randint(1000, 9999)}-{random.randint(1000, 9999)}",
-                    esta_gestante=esta_gestante,
                     logradouro=random.choice(NOMES_RUA),
                     numero=str(random.randint(10, 2500)),
                     bairro=hub['bairro'],

@@ -76,7 +76,6 @@ class BaseAgenda(TestCase):
             cpf='999.888.777-66',
             data_nascimento=date(1990, 1, 1),
             sexo='M',
-            peso=Decimal('75.0'),
             tipo_sanguineo='O+',
             logradouro='Rua Teste',
             numero='1',
@@ -241,7 +240,7 @@ class RegistrarDoacaoTests(BaseAgenda):
         )
         self.outro_doador = Doador.objects.create(
             usuario=outro_usuario, nome_completo='Doador De Outro Lugar', cpf='111.444.777-35',
-            data_nascimento=date(1990, 1, 1), sexo='M', peso=Decimal('75.0'),
+            data_nascimento=date(1990, 1, 1), sexo='M',
             tipo_sanguineo='A+', logradouro='Rua C', numero='3', bairro='Centro',
             cidade='São Paulo', estado='SP', cep='01001-000',
             latitude=Decimal('-23.55'), longitude=Decimal('-46.63'),
@@ -561,7 +560,7 @@ class CadastroPresencialTests(BaseAgenda):
             'username': 'presencial1', 'email': 'presencial1@email.com',
             'password1': 'SenhaForte!2026', 'password2': 'SenhaForte!2026',
             'nome_completo': 'Doador Presencial', 'cpf': '529.982.247-25',
-            'data_nascimento': '1990-01-01', 'sexo': 'M', 'peso': '75.0',
+            'data_nascimento': '1990-01-01', 'sexo': 'M',
             'tipo_sanguineo': 'O+', 'telefone': '',
             'logradouro': 'Rua A', 'numero': '1', 'bairro': 'Centro',
             'cidade': 'São Paulo', 'estado': 'SP', 'cep': '01001-000',
@@ -762,28 +761,24 @@ class AptidaoNaConfirmacaoTests(BaseAgenda):
             {'doador_id': self.doador.pk, 'data_doacao': (data or date.today()).isoformat(), 'local': ''},
         )
 
-    def test_registro_bloqueado_para_doador_abaixo_do_peso(self):
-        self.doador.peso = Decimal('45.0')
-        self.doador.save()
+    def _doacao_recente(self):
+        from doadores.models import HistoricoDoacao
+        HistoricoDoacao.objects.create(doador=self.doador, data_doacao=date.today() - timedelta(days=10))
+
+    def test_registro_bloqueado_para_doador_dentro_do_intervalo(self):
+        self._doacao_recente()
         self._agendamento(0)
         resp = self._registrar()
-        self.assertEqual(self.doador.historico.count(), 0)
+        self.assertEqual(self.doador.historico.count(), 1)
         self.assertContains(resp, 'não está apto a doar')
 
-    def test_registro_bloqueado_para_gestante(self):
-        self.doador.esta_gestante = True
-        self.doador.save()
-        self._registrar()
-        self.assertEqual(self.doador.historico.count(), 0)
-
     def test_concluir_bloqueado_para_doador_inapto(self):
-        self.doador.peso = Decimal('45.0')
-        self.doador.save()
+        self._doacao_recente()
         agendamento = self._agendamento(0)
         self._acao(agendamento, 'concluir')
         agendamento.refresh_from_db()
         self.assertEqual(agendamento.status, Agendamento.Status.CONFIRMADO)
-        self.assertEqual(self.doador.historico.count(), 0)
+        self.assertEqual(self.doador.historico.count(), 1)
 
     def test_idade_fica_para_a_triagem_e_nao_bloqueia_a_confirmacao(self):
         self.doador.data_nascimento = date(date.today().year - 73, 1, 1)
@@ -794,8 +789,7 @@ class AptidaoNaConfirmacaoTests(BaseAgenda):
         self.assertEqual(self.doador.historico.count(), 1)
 
     def test_tela_de_registro_desativa_o_botao_e_mostra_os_motivos(self):
-        self.doador.peso = Decimal('45.0')
-        self.doador.save()
+        self._doacao_recente()
         resp = self.client.get(reverse('hemocentros:registrar_doacao'), {'doador': self.doador.pk})
         self.assertContains(resp, 'Não é possível confirmar a doação')
         self.assertIn('disabled', resp.content.decode()[resp.content.decode().index('Confirmar doação') - 120:])
